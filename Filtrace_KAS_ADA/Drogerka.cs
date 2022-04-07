@@ -9,7 +9,13 @@ namespace Filtrace_KAS_ADA
 
     class Drogerka
     {
+        //Vlastnosti
+
         //Konstruktor
-        //int druh, int znacka, int cena, bool dostupnost, string typ, DateTime trvanlivost, int obsah
+        public Drogerka(int druh, int znacka, int cena, bool dostupnost, string typ, DateTime trvanlivost, int obsah)
+        {
+            
+        }
+        
     }
 }
