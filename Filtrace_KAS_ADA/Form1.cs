@@ -137,6 +137,7 @@ namespace Filtrace_KAS_ADA
                 IDDruhy = drogerka.Druh;
                 IDZnacka = drogerka.Znacka;
                 MessageBox.Show(Convert.ToString(ListZnacky.Count) + " " + Convert.ToString(ListDruhy.Count));
+
                 for (int i = 0; i < ListDruhy.Count; i++)
                 {
                     string dataDruhy = "";
@@ -163,14 +164,12 @@ namespace Filtrace_KAS_ADA
 
         private void CteniTabulky(SqlDataReader tabulka, int typ)
         {
-            ListDrogerie = new List<string>();
-            ListDruhy = new List<string>();
-            ListZnacky = new List<string>();
             switch (typ)
             {
                 case 1:
                     {
-                          while (tabulka.Read())
+                        ListDrogerie = new List<string>();
+                        while (tabulka.Read())
                           {
                                 string polozka = "";
                                 //do stringu
@@ -193,6 +192,7 @@ namespace Filtrace_KAS_ADA
                     }
                 case 2:
                     {
+                        ListDruhy = new List<string>();
                         while (tabulka.Read())
                         {
                             string polozka = "";
@@ -204,6 +204,7 @@ namespace Filtrace_KAS_ADA
                     }
                 case 3:
                     {
+                        ListZnacky = new List<string>();
                         while (tabulka.Read())
                         {
                             string polozka = "";
