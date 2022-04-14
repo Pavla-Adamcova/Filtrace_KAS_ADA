@@ -136,7 +136,6 @@ namespace Filtrace_KAS_ADA
             {
                 IDDruhy = drogerka.Druh;
                 IDZnacka = drogerka.Znacka;
-                MessageBox.Show(Convert.ToString(ListZnacky.Count) + " " + Convert.ToString(ListDruhy.Count));
 
                 for (int i = 0; i < ListDruhy.Count; i++)
                 {
@@ -199,7 +198,6 @@ namespace Filtrace_KAS_ADA
                             polozka = tabulka[0].ToString() + ";" + tabulka[1].ToString();
                             ListDruhy.Add(polozka);
                         }
-                        MessageBox.Show("Druhy " + Convert.ToString(ListDruhy.Count));
                         break;
                     }
                 case 3:
@@ -211,7 +209,6 @@ namespace Filtrace_KAS_ADA
                             polozka = tabulka[0].ToString() + ";" + tabulka[1].ToString();
                             ListZnacky.Add(polozka);
                         }
-                        MessageBox.Show("Znacky " + Convert.ToString(ListZnacky.Count));
                         break;
                     }
             }
