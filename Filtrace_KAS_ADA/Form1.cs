@@ -20,7 +20,7 @@ namespace Filtrace_KAS_ADA
         int Druh;
         int Znacka;
         int Cena;
-        bool Dostupnost;
+        bool Dostupnost = false;
         string Typ;
         DateTime Trvanlivost;
         int Obsah;
@@ -30,6 +30,7 @@ namespace Filtrace_KAS_ADA
         List<string> ListDrogerie;
         List<string> ListZnacky;
         List<string> ListDruhy;
+        
         public Form1()
         {
             InitializeComponent();
@@ -77,50 +78,118 @@ namespace Filtrace_KAS_ADA
 
         private void Form1_Load(object sender, EventArgs e)
         {
-        
+            comBDruh.SelectedIndex = 1;
+            comBZnacka.SelectedIndex = 1;
+
         }
 
         private void btVytvorit_Click(object sender, EventArgs e)
         {
-            //command
-           // string insertCommand = $@"INSERT INTO [Drogerie] (Id, Druh, Znacka, Cena, Dostupnost, Typ, Trvanlivost, Obsah, Plet, Telo) VALUES ('{tb}');
+            //ošetření
+            string cena = Convert.DBNull.ToString();
+            if(numCena.Value >= 10 && numCena.Value <= 3000)
+            {
+                cena = numCena.Value.ToString();
+            }
 
-            //otevření databáze
-            //sqlconnection.Open();
+            string dostupnost = Convert.DBNull.ToString();
+            dostupnost = Dostupnost.ToString();
 
-            //SqlCommand sqlcommand = new SqlCommand(insertCommand, sqlconnection);
+            string typ = Convert.DBNull.ToString();
+            typ = Typ;
 
-            //sqlcommand.ExecuteNonQuery();
+            string obsah = Convert.DBNull.ToString();
+            if(numObsah.Value >= 1 && numObsah.Value <= 500)
+            {
+                obsah = numObsah.Value.ToString();
+            }
+            int podminka1 = dateTP.Value.Year - DateTime.Now.Year;
+            int podmina2 = DateTime.Now.Year - dateTP.Value.Year;
+            if ((dateTP.Value.Year - DateTime.Now.Year <= 50) && (dateTP.Value.Year - DateTime.Now.Year > -1))
+            {
+                //command
+                string insertCommand = $@"INSERT INTO [Drogerie] (Druh, Znacka, Cena, Dostupnost, Typ, Trvanlivost, Obsah) VALUES ('{comBDruh.SelectedIndex + 1}', '{comBZnacka.SelectedIndex + 1}', '{cena}', '{dostupnost}', '{typ}', '{dateTP.Value:MM-dd-yyy}', '{obsah}')";
 
-            //sqlconnection.Close();
+                //otevření databáze
+                sqlconnection.Open();
+
+                SqlCommand sqlcommand = new SqlCommand(insertCommand, sqlconnection);
+
+                sqlcommand.ExecuteNonQuery();
+
+                sqlconnection.Close();
+            }
+            else
+            {
+                MessageBox.Show("Špatná trvanlivost - prošlé.");
+            }
+               
         }
 
         private void listBDrogerie_SelectedIndexChanged(object sender, EventArgs e)
         {
-            //lbInfoCena.Text = lbInfoDostupnost.Text = lbInfoObsah.Text = lbInfoPlet.Text = lbInfoTelo.Text = lbInfoTrvanlivost.Text = lbInfoTyp.Text = lbInfoZnacka.Text = "";
-            //int index = listBDrogerie.SelectedIndex;
-            ////  string[] pole = listPolozky[index];
+            lbInfoDruh.Text = lbInfoCena.Text = lbInfoDostupnost.Text = lbInfoObsah.Text = lbInfoTrvanlivost.Text = lbInfoTyp.Text = lbInfoZnacka.Text = "";
+            int index = listBDrogerie.SelectedIndex + 1;
 
-            //for (int i = 0; i < listDrogerka.Count; i++)
-            //{
-            //    //string[] pole = listPolozky[i].ToString();
+            int IDDruhy = 0;
+            int IDZnacka = 0;
 
-            //}
-            //lbInfoZnacka.Text = listDrogerka[index].ToString();
+            ZnackyString = "";
+            DruhyString = "";
 
-            //lbInfoDruh.Text = pole[1];
-            //lbInfoZnacka.Text = pole[2];
-            //lbInfoCena.Text = pole[3];
-            //lbInfoDostupnost.Text = pole[4];
-            //lbInfoTyp.Text = pole[5];
-            //lbInfoTrvanlivost.Text = pole[6];
-            //lbInfoObsah.Text = pole[7];
-            //lbInfoPlet.Text = pole[8];
-            //lbInfoTelo.Text = pole[9];
+            foreach(Drogerka drogerka in listDrogerka)
+            {
+                
 
-        }
-        private void radioButtons_CheckedChanged(object sender, EventArgs e)
-        {
+                
+                //For pro Databazi Drogerka
+                for (int i = 0; i < ListDrogerie.Count; i++)
+                {
+                    string dataDrogerka = "";
+                    dataDrogerka = ListDrogerie[i].ToString();
+                    string[] poleDrogerka = dataDrogerka.Split(';');
+                    if(index == Convert.ToInt32(poleDrogerka[0]))
+                    {
+                        IDDruhy = Convert.ToInt32(poleDrogerka[1]);
+                        IDZnacka =  Convert.ToInt32(poleDrogerka[2]);
+                        lbInfoCena.Text = poleDrogerka[3] + " Kč";
+                        if(Convert.ToBoolean(poleDrogerka[4]) == true)
+                        {
+                            lbInfoDostupnost.Text = "Dostupné";
+                        }
+                        else
+                        {
+                            lbInfoDostupnost.Text = "Nedostupné";
+                        }
+                        lbInfoTyp.Text = poleDrogerka[5];
+                        lbInfoTrvanlivost.Text = poleDrogerka[6];
+                        lbInfoObsah.Text = poleDrogerka[7];
+                    }
+                    for (int j = 0; j < ListDruhy.Count; j++)
+                    {
+                        string dataDruhy = "";
+                        dataDruhy = ListDruhy[j].ToString();
+                        string[] poleDruhy = dataDruhy.Split(';');
+                        if (IDDruhy == Convert.ToInt32(poleDruhy[0]))
+                        {
+                            lbInfoDruh.Text = poleDruhy[1];
+                            break;
+                        }
+                    }
+                    for (int k = 0; k < ListZnacky.Count; k++)
+                    {
+                        string dataZnacky = "";
+                        dataZnacky = ListZnacky[k].ToString();
+                        string[] poleZnacky = dataZnacky.Split(';');
+                        if (IDZnacka == Convert.ToInt32(poleZnacky[0]))
+                        {
+                            lbInfoZnacka.Text = poleZnacky[1];
+                            break;
+                        }
+                    }
+                }
+    
+            }    
 
         }
 
@@ -214,6 +283,37 @@ namespace Filtrace_KAS_ADA
             }
 
 
+        }
+        private void rbDostupnost_CheckedChanged(object sender, EventArgs e)
+        {
+            if(rbDostupny.Checked == true)
+            {
+                Dostupnost = true;
+            }
+            else if(rbNedostupny.Checked == true)
+            {
+                Dostupnost = false;
+            }
+        }
+        private void checkBox_Typ_CheckedChanged(object sender, EventArgs e)
+        {
+            if (chbSucha.Checked == true)
+            {
+                Typ = chbSucha.Text;
+                chbNormalni.Checked = chbMastna.Checked = false;
+                chbNormalni.Enabled = chbMastna.Enabled = false;
+            } else if (chbNormalni.Checked == true)
+            {
+                Typ = chbNormalni.Text;
+                chbSucha.Checked = chbMastna.Checked = false;
+                chbSucha.Enabled = chbMastna.Enabled = false;
+            }
+            else if (chbMastna.Checked == true)
+            {
+                Typ = chbMastna.Text;
+                chbNormalni.Checked = chbSucha.Checked = false;
+                chbNormalni.Enabled = chbSucha.Enabled = false;
+            }
         }
     }
 }
