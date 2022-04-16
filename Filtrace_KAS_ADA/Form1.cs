@@ -24,12 +24,12 @@ namespace Filtrace_KAS_ADA
         string Typ;
         DateTime Trvanlivost;
         int Obsah;
-        string DruhyString;
-        string ZnackyString;
         //listy
         List<string> ListDrogerie;
         List<string> ListZnacky;
         List<string> ListDruhy;
+        //index
+        int index = -1;
         
         public Form1()
         {
@@ -128,14 +128,15 @@ namespace Filtrace_KAS_ADA
 
         private void listBDrogerie_SelectedIndexChanged(object sender, EventArgs e)
         {
+            index = -1;
             lbInfoDruh.Text = lbInfoCena.Text = lbInfoDostupnost.Text = lbInfoObsah.Text = lbInfoTrvanlivost.Text = lbInfoTyp.Text = lbInfoZnacka.Text = "";
-            int index = listBDrogerie.SelectedIndex + 1;
+            index = listBDrogerie.SelectedIndex + 1;
 
             int IDDruhy = 0;
             int IDZnacka = 0;
 
-            ZnackyString = "";
-            DruhyString = "";
+            string ZnackyString = "";
+            string DruhyString = "";
 
             foreach(Drogerka drogerka in listDrogerka)
             {
@@ -163,7 +164,7 @@ namespace Filtrace_KAS_ADA
                         }
                         lbInfoTyp.Text = poleDrogerka[5];
                         lbInfoTrvanlivost.Text = poleDrogerka[6];
-                        lbInfoObsah.Text = poleDrogerka[7];
+                        lbInfoObsah.Text = poleDrogerka[7] + " ml/g";
                     }
                     for (int j = 0; j < ListDruhy.Count; j++)
                     {
@@ -195,11 +196,12 @@ namespace Filtrace_KAS_ADA
 
         private void Vypis()
         {
+            listBDrogerie.Items.Clear();
             int IDDruhy = 0;
             int IDZnacka = 0;
 
-            ZnackyString = "";
-            DruhyString = "";
+            string ZnackyString = "";
+            string DruhyString = "";
 
             foreach(Drogerka drogerka in listDrogerka)
             {
@@ -314,6 +316,75 @@ namespace Filtrace_KAS_ADA
                 chbNormalni.Checked = chbSucha.Checked = false;
                 chbNormalni.Enabled = chbSucha.Enabled = false;
             }
+        }
+
+        private void btSmazat_Click(object sender, EventArgs e)
+        {
+            ////command
+            //string insertCommand = $@"DELETE FROM Drogerie WHERE Id "(Druh, Znacka, Cena, Dostupnost, Typ, Trvanlivost, Obsah) VALUES ('{comBDruh.SelectedIndex + 1}', '{comBZnacka.SelectedIndex + 1}', '{cena}', '{dostupnost}', '{typ}', '{dateTP.Value:MM-dd-yyy}', '{obsah}')";
+
+            ////otevření databáze
+            //sqlconnection.Open();
+
+            //SqlCommand sqlcommand = new SqlCommand(insertCommand, sqlconnection);
+
+            //sqlcommand.ExecuteNonQuery();
+
+            //sqlconnection.Close();
+            //Vypis();
+        }
+
+        private void btFiltrovat_Click(object sender, EventArgs e)
+        {
+            int filtrDruh = comBDruh.SelectedIndex;
+            int filtrZnacka = comBZnacka.SelectedIndex;
+            int filtrCena = Convert.ToInt32(numCena.Value);
+            bool filtrDostupnost = Dostupnost;
+            string filtrTyp = Typ;
+            int filtrTrvanlivost = dateTP.Value.Year;
+
+            int Druhy = 0;
+            int Znacka = 0;
+            string DruhyString = "";
+            string ZnackyString = "";
+            foreach(Drogerka drogerka in listDrogerka)
+            {
+                for(int i = 0; i < ListDrogerie.Count; i++)
+                {
+                    string record = ListDrogerie[i].ToString();
+                    string[] poleDrogerie = record.Split(';');
+                    DateTime trvalnivostDATETIMERok = Convert.ToDateTime(poleDrogerie[6]);
+                    int trvanlivostINTRok = trvalnivostDATETIMERok.Year;
+                    if(filtrDruh == Convert.ToInt32(poleDrogerie[1]) || filtrZnacka == Convert.ToInt32(poleDrogerie[2]) || filtrCena > Convert.ToInt32(poleDrogerie[3]) || filtrDostupnost == Convert.ToBoolean(poleDrogerie[4]) || filtrTyp == poleDrogerie[5] || ((trvanlivostINTRok - filtrTrvanlivost) > 0))
+                    {
+                        listBDrogerie.Items.Clear();
+                        int IDDruhy = Convert.ToInt32(poleDrogerie[1]);
+                        int IDZnacka = Convert.ToInt32(poleDrogerie[2]);
+                        for (int j = 0; j < ListDruhy.Count; j++)
+                        {
+                            string dataDruhy = "";
+                            dataDruhy = ListDruhy[j].ToString();
+                            string[] poleDruhy = dataDruhy.Split(';');
+                            if (IDDruhy == Convert.ToInt32(poleDruhy[0]))
+                            {
+                                DruhyString = poleDruhy[1];
+                            }
+                        }
+                        for (int k = 0; k < ListZnacky.Count; k++)
+                        {
+                            string dataZnacky = "";
+                            dataZnacky = ListZnacky[k].ToString();
+                            string[] poleZnacky = dataZnacky.Split(';');
+                            if (IDZnacka == Convert.ToInt32(poleZnacky[0]))
+                            {
+                                ZnackyString = poleZnacky[1];
+                            }
+                        }
+                        listBDrogerie.Items.Add(DruhyString + " - " + ZnackyString);
+                    }
+                }
+            }
+
         }
     }
 }

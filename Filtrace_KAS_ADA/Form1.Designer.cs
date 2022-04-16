@@ -66,6 +66,7 @@
             this.chbSucha = new System.Windows.Forms.CheckBox();
             this.chbNormalni = new System.Windows.Forms.CheckBox();
             this.chbMastna = new System.Windows.Forms.CheckBox();
+            this.btFiltrovat = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.numObsah)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numCena)).BeginInit();
             this.SuspendLayout();
@@ -196,6 +197,7 @@
             this.btSmazat.TabIndex = 22;
             this.btSmazat.Text = "Smazat";
             this.btSmazat.UseVisualStyleBackColor = false;
+            this.btSmazat.Click += new System.EventHandler(this.btSmazat_Click);
             // 
             // btVytvorit
             // 
@@ -536,12 +538,26 @@
             this.chbMastna.UseVisualStyleBackColor = true;
             this.chbMastna.CheckedChanged += new System.EventHandler(this.checkBox_Typ_CheckedChanged);
             // 
+            // btFiltrovat
+            // 
+            this.btFiltrovat.BackColor = System.Drawing.Color.PeachPuff;
+            this.btFiltrovat.Font = new System.Drawing.Font("Franklin Gothic Medium Cond", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.btFiltrovat.Location = new System.Drawing.Point(1073, 565);
+            this.btFiltrovat.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.btFiltrovat.Name = "btFiltrovat";
+            this.btFiltrovat.Size = new System.Drawing.Size(225, 83);
+            this.btFiltrovat.TabIndex = 57;
+            this.btFiltrovat.Text = "Filtrovat";
+            this.btFiltrovat.UseVisualStyleBackColor = false;
+            this.btFiltrovat.Click += new System.EventHandler(this.btFiltrovat_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.MistyRose;
             this.ClientSize = new System.Drawing.Size(1554, 691);
+            this.Controls.Add(this.btFiltrovat);
             this.Controls.Add(this.chbMastna);
             this.Controls.Add(this.chbNormalni);
             this.Controls.Add(this.chbSucha);
@@ -631,6 +647,7 @@
         private System.Windows.Forms.CheckBox chbSucha;
         private System.Windows.Forms.CheckBox chbNormalni;
         private System.Windows.Forms.CheckBox chbMastna;
+        private System.Windows.Forms.Button btFiltrovat;
     }
 }
 
