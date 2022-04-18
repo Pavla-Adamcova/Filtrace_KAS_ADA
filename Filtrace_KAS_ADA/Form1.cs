@@ -29,7 +29,7 @@ namespace Filtrace_KAS_ADA
         List<string> ListZnacky;
         List<string> ListDruhy;
         //index
-        int index = -1;
+        int index = 0;
         
         public Form1()
         {
@@ -128,52 +128,26 @@ namespace Filtrace_KAS_ADA
 
         private void listBDrogerie_SelectedIndexChanged(object sender, EventArgs e)
         {
-            index = -1;
             lbInfoDruh.Text = lbInfoCena.Text = lbInfoDostupnost.Text = lbInfoObsah.Text = lbInfoTrvanlivost.Text = lbInfoTyp.Text = lbInfoZnacka.Text = "";
-            index = listBDrogerie.SelectedIndex + 1;
 
-            int IDDruhy = 0;
-            int IDZnacka = 0;
-
-            string ZnackyString = "";
-            string DruhyString = "";
-
-            foreach(Drogerka drogerka in listDrogerka)
+            if(listBDrogerie.SelectedIndex != -1)
             {
-                
-
-                
-                //For pro Databazi Drogerka
-                for (int i = 0; i < ListDrogerie.Count; i++)
+                index = 0;
+                int IntDruh = 0;
+                int IntZnacka = 0;
+                string StringDruh = "";
+                string StringZnacka = "";
+                foreach(Drogerka drogerka in listDrogerka)
                 {
-                    string dataDrogerka = "";
-                    dataDrogerka = ListDrogerie[i].ToString();
-                    string[] poleDrogerka = dataDrogerka.Split(';');
-                    if(index == Convert.ToInt32(poleDrogerka[0]))
-                    {
-                        IDDruhy = Convert.ToInt32(poleDrogerka[1]);
-                        IDZnacka =  Convert.ToInt32(poleDrogerka[2]);
-                        lbInfoCena.Text = poleDrogerka[3] + " Kč";
-                        if(Convert.ToBoolean(poleDrogerka[4]) == true)
-                        {
-                            lbInfoDostupnost.Text = "Dostupné";
-                        }
-                        else
-                        {
-                            lbInfoDostupnost.Text = "Nedostupné";
-                        }
-                        lbInfoTyp.Text = poleDrogerka[5];
-                        lbInfoTrvanlivost.Text = poleDrogerka[6];
-                        lbInfoObsah.Text = poleDrogerka[7] + " ml/g";
-                    }
                     for (int j = 0; j < ListDruhy.Count; j++)
                     {
                         string dataDruhy = "";
                         dataDruhy = ListDruhy[j].ToString();
                         string[] poleDruhy = dataDruhy.Split(';');
-                        if (IDDruhy == Convert.ToInt32(poleDruhy[0]))
+                        if (Convert.ToInt32(poleDruhy[0]) == listDrogerka[index].Druh)
                         {
-                            lbInfoDruh.Text = poleDruhy[1];
+                            StringDruh = poleDruhy[1];
+                            IntDruh = Convert.ToInt32(poleDruhy[0]);
                             break;
                         }
                     }
@@ -182,15 +156,42 @@ namespace Filtrace_KAS_ADA
                         string dataZnacky = "";
                         dataZnacky = ListZnacky[k].ToString();
                         string[] poleZnacky = dataZnacky.Split(';');
-                        if (IDZnacka == Convert.ToInt32(poleZnacky[0]))
+                        if (Convert.ToInt32(poleZnacky[0]) == listDrogerka[index].Znacka)
                         {
-                            lbInfoZnacka.Text = poleZnacky[1];
+                            StringZnacka = poleZnacky[1];
+                            IntZnacka = Convert.ToInt32(poleZnacky[0]);
                             break;
                         }
                     }
+                    if (StringDruh + " - " + StringZnacka == Convert.ToString(listBDrogerie.SelectedItem))
+                        break;
+
+                    index++;
                 }
-    
-            }    
+                //Vypis Druh
+                lbInfoDruh.Text = StringDruh;
+               
+                //Vypis Znacka
+                lbInfoZnacka.Text = StringZnacka;
+            
+                //vypis Cena
+                lbInfoCena.Text = listDrogerka[index].Cena.ToString();
+                //Vypis Dostupnost
+                if(listDrogerka[index].Dostupnost.ToString() == "true")
+                {
+                    lbInfoDostupnost.Text = "Dostupné";
+                }
+                else
+                {
+                    lbInfoDostupnost.Text = "Nedostupné";
+                }
+                //Vypis Typ
+                lbInfoTyp.Text = listDrogerka[index].Typ;
+                //Vypis Trvanlivost
+                lbInfoTrvanlivost.Text = listDrogerka[index].Trvanlivsot.ToString();
+                //Vypis Obsah
+                lbInfoObsah.Text = listDrogerka[index].Obsah.ToString();
+            }  
 
         }
 
@@ -202,11 +203,20 @@ namespace Filtrace_KAS_ADA
 
             string ZnackyString = "";
             string DruhyString = "";
+            int scitac = 0;
 
             foreach(Drogerka drogerka in listDrogerka)
             {
                 IDDruhy = drogerka.Druh;
-                IDZnacka = drogerka.Znacka;
+                IDZnacka = drogerka.Znacka;  
+
+                //for(int d = 0; d < listDrogerka.Count; d++)
+                //{
+                //    string dataDrogerka = "";
+                //    dataDrogerka = listDrogerka[d].ToString();
+                //    string[] poleDrogerka = dataDrogerka.Split(';');
+                //    Index = poleDrogerka[0];
+                //}
 
                 for (int i = 0; i < ListDruhy.Count; i++)
                 {
@@ -228,7 +238,11 @@ namespace Filtrace_KAS_ADA
                         ZnackyString = poleZnacky[1];
                     }
                 }
+                string dataDrogerka = "";
+                dataDrogerka = ListDrogerie[scitac].ToString();
+                string[] poleDrogerka = dataDrogerka.Split(';');
                 listBDrogerie.Items.Add(DruhyString + " - " + ZnackyString);
+                scitac++;
             }
         }
 
@@ -347,7 +361,9 @@ namespace Filtrace_KAS_ADA
             int Znacka = 0;
             string DruhyString = "";
             string ZnackyString = "";
-            foreach(Drogerka drogerka in listDrogerka)
+
+    
+            foreach (Drogerka drogerka in listDrogerka)
             {
                 for(int i = 0; i < ListDrogerie.Count; i++)
                 {
