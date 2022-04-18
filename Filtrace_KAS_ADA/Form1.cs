@@ -210,14 +210,7 @@ namespace Filtrace_KAS_ADA
                 IDDruhy = drogerka.Druh;
                 IDZnacka = drogerka.Znacka;  
 
-                //for(int d = 0; d < listDrogerka.Count; d++)
-                //{
-                //    string dataDrogerka = "";
-                //    dataDrogerka = listDrogerka[d].ToString();
-                //    string[] poleDrogerka = dataDrogerka.Split(';');
-                //    Index = poleDrogerka[0];
-                //}
-
+             
                 for (int i = 0; i < ListDruhy.Count; i++)
                 {
                     string dataDruhy = "";
